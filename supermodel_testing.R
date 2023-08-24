@@ -68,18 +68,9 @@ PH[t] = PH[t-1] + (prod[t-1] - pmort[t-1] - grazing[t-1]) *dt
 N[t] = N[t-1] + ((-prod[t-1] + pmort[t-1] + y*grazing[t-1] + (H_mort * H[t-1]) + 
                     (P_mort * P[t-1])) *dt)
 
-#H[t] = H[t-1] + (((1-y) * grazing[t-1]) * (1 - H[t-1] / K_H) - (H_mort*H[t-1]) - 
- #                  (c * H[t-1] * P[t-1] / (d + H[t-1]))) * dt
-
-#H[t] = H[t-1] + (((1-y) * grazing[t-1]) * (1 - H[t-1] / K_H) - (H_mort*H[t-1]) -
- #                  (c * H[t-1] * P[t-1]) / (d + H[t-1])
-  #               ) * dt
-
 H[t] = H[t-1] + ((r_H * H[t-1]) * (1 - H[t-1] / K_H) + ((1-y) * grazing[t-1]) - (H_mort*H[t-1]) -
                    (c * H[t-1] * P[t-1]) / (d + H[t-1])
 ) * dt
-
-#P[t] = P[t-1] + (e * c * H[t-1] * P[t-1] / (d + H[t-1]) - (P_mort*P[t-1])) * dt
 
 P[t] = P[t-1] + (r_P * P[t-1] * (1 - P[t-1] / K_P) - (P_mort*P[t-1]) +
                    (b * H[t-1] * P[t-1]) / (d + H[t-1])
@@ -94,3 +85,25 @@ df_long <- df %>% pivot_longer(N:P, names_to = "variable", values_to = "value")
 
 ggplot(data=df_long, aes(x=time, y = value, col=variable)) + geom_line()
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+##old
+#H[t] = H[t-1] + (((1-y) * grazing[t-1]) * (1 - H[t-1] / K_H) - (H_mort*H[t-1]) - 
+#                  (c * H[t-1] * P[t-1] / (d + H[t-1]))) * dt
+
+#H[t] = H[t-1] + (((1-y) * grazing[t-1]) * (1 - H[t-1] / K_H) - (H_mort*H[t-1]) -
+#                  (c * H[t-1] * P[t-1]) / (d + H[t-1])
+#               ) * dt
+
+#P[t] = P[t-1] + (e * c * H[t-1] * P[t-1] / (d + H[t-1]) - (P_mort*P[t-1])) * dt
