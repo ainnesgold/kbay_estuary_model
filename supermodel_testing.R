@@ -6,13 +6,13 @@ P_mort <- 0.1
 Vm = 2    # max phtyoplankton growth rate
 Rm = 1.1  # max fish ingestion rate, 1.1
 ks = 1 # half-saturation constant for phytoplankton N uptake 
-m = 0.1      # phytoplankton mortality
+m = 0.1     # phytoplankton mortality
 kg = 12      # grazing half saturation or (1/Ivlev constant)
 y = 0.1  # unassimilated phytoplankton fraction
 #g = 0.001      # fish mortality
 e <- 0.2
-r_H <- 0.3
-r_P <- 0.3
+r_H <- 0.2
+r_P <- 0.2
 b <- 0.3
 c <- 0.5
 d <- 100
@@ -60,20 +60,21 @@ P[1] <- 5
 #conversion of phytoplankton to herbivore biomass
 
 for(t in 2:timesteps){
-prod[t-1] = PH[t-1] * ((Vm * N[t-1])/ ks + N[t-1])
+prod[t-1] = PH[t-1] * ((Vm * N[t-1])/ (ks + N[t-1]))
+#prod[t-1] = 0
 pmort[t-1] = PH[t-1] * m
 grazing[t-1] = Rm * ingestion(predation_type, kg, PH[t-1]) * H[t-1]
 
 PH[t] = PH[t-1] + (prod[t-1] - pmort[t-1] - grazing[t-1]) *dt
-N[t] = N[t-1] + ((-prod[t-1] + pmort[t-1] + y*grazing[t-1] + (H_mort * H[t-1]) + 
-                    (P_mort * P[t-1])) *dt)
+N[t] = N[t-1] + ((-prod[t-1] + pmort[t-1] + y*grazing[t-1] + 0.5*(H_mort * H[t-1]) + 
+                    0.5*(P_mort * P[t-1])) *dt)
 
 H[t] = H[t-1] + ((r_H * H[t-1]) * (1 - H[t-1] / K_H) + ((1-y) * grazing[t-1]) - (H_mort*H[t-1]) -
-                   (c * H[t-1] * P[t-1]) / (d + H[t-1])
+                  ((c * H[t-1] * P[t-1]) / (d + H[t-1]))
 ) * dt
 
-P[t] = P[t-1] + (r_P * P[t-1] * (1 - P[t-1] / K_P) - (P_mort*P[t-1]) +
-                   (b * H[t-1] * P[t-1]) / (d + H[t-1])
+P[t] = P[t-1] + ((r_P * P[t-1]) * (1 - P[t-1] / K_P) - (P_mort*P[t-1]) +
+                   ((b * H[t-1] * P[t-1]) / (d + H[t-1]))
                 ) * dt
 }
 
