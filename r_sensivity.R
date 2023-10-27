@@ -49,7 +49,7 @@ predation_type = 'M-P'
 
 
 dt = 0.01
-timesteps = 365*100
+timesteps = 365*10
 
 prod <- array(NA, dim = c(timesteps))
 phmort <- array(NA, dim = c(timesteps))
@@ -76,14 +76,13 @@ for (iter in 1:n) {
   P[1] <- 5
   
   for(t in 2:timesteps){
-    prod[t-1] = PH[t-1] * ((Vm * N[t-1])/ ks + N[t-1])
+    prod[t-1] = PH[t-1] * ((Vm * N[t-1])/ (ks + N[t-1]))
     phmort[t-1] = PH[t-1] * m
     grazing[t-1] = Rm * ingestion(predation_type, kg, PH[t-1]) * H[t-1]
     
     PH[t] = PH[t-1] + (prod[t-1] - phmort[t-1] - grazing[t-1]) *dt
     N[t] = N[t-1] + ((-prod[t-1] + phmort[t-1] + y*grazing[t-1] + (H_mort * H[t-1]) + 
                         (P_mort * P[t-1])) *dt)
-    
     H[t] = H[t-1] + ((parameter_grid[['r_H']][[iter]] * H[t-1]) * (1 - H[t-1] / K_H) + ((1-y) * grazing[t-1]) - (H_mort*H[t-1]) -
                        (c * H[t-1] * P[t-1]) / (d + H[t-1])
     ) * dt
